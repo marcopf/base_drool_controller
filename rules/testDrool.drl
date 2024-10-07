@@ -1,0 +1,25 @@
+import com.drool.demo.object.Order
+import com.drool.demo.object.PriceCompare
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+global Logger logger;
+dialect "mvel"
+
+rule "BLOCK FOR NAME"
+    when
+        $order: Order()
+        eval($order.getName() != "TEST")
+    then
+        $order.setBlocked(true);
+end
+
+rule "BLOCK FOR PRICE"
+    when
+        $tester: PriceCompare();
+        $order: Order()
+        eval($order.getPrice() > $tester.getMaxValue())
+    then
+        $order.setBlocked(true);
+end
